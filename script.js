@@ -1,50 +1,119 @@
- // Crie uma instância da fila
+// Crie uma instância da fila
+const minhaLista = new LinkedList();
 
+// Função para adicionar um elemento no Inicio
+function adicionarElementoInicio() {
+  const descricao = document.getElementById("txtnovaTarefa").value.trim();// trim -> remover espaços vazios
+  const prioridade = document.getElementById("txtnovaPrioridade").value.trim();
 
- // Função para adicionar um elemento no Inicio
- function adicionarElementoInicio() {
-    const descricao = document.getElementById("txtnovaTarefa").value.trim();
-    const prioridade = document.getElementById("txtnovaPrioridade").value.trim();
+  const novaTarefa = new Tarefa(descricao, prioridade, obterDataAtual(), obterHoraAtual());
+  minhaLista.addFirst(novaTarefa);
+  console.log(minhaLista.toString());
 
-    // Implementar
-    
- }
- //---------
-  function adicionarElementoFinal() {
-    
-  }
- 
- 
+  //limpar input
+
+  document.getElementById("txtnovaTarefa").value = "";
+  document.getElementById("txtnovaPrioridade").value = "";
+  document.getElementById("txtnovaTarefa").focus();
+
+  atualizarLista();
+}
+//---------
+function adicionarElementoFinal() {
+  const descricao = document.getElementById("txtnovaTarefa").value.trim();// trim -> remover espaços vazios
+  const prioridade = document.getElementById("txtnovaPrioridade").value.trim();
+
+  const novaTarefa = new Tarefa(descricao, prioridade, obterDataAtual(), obterHoraAtual());
+  minhaLista.addLast(novaTarefa);
+  console.log(minhaLista.toString());
+  //limpar input
+  document.getElementById("txtnovaTarefa").value = "";
+  document.getElementById("txtnovaPrioridade").value = "";
+  document.getElementById("txtnovaTarefa").focus();
+
+  atualizarLista();
+}
+//---------
+function adicionarIndice() {
+  const descricao = document.getElementById("txtnovaTarefa").value.trim();// trim -> remover espaços vazios
+  const prioridade = document.getElementById("txtnovaPrioridade").value.trim();
+  const posicao = document.getElementById("txtIndice").value.trim();
+
+  const novaTarefa = new Tarefa(descricao, prioridade, obterDataAtual(), obterHoraAtual());
+  minhaLista.addAtIndex(posicao, novaTarefa);
+  console.log(minhaLista.toString());
+  //limpar input
+  document.getElementById("txtnovaTarefa").value = "";
+  document.getElementById("txtnovaPrioridade").value = "";
+  document.getElementById("txtnovaTarefa").focus();
+
+  atualizarLista();
+}
+
 //--------------------------------------------------------------------------------------------
- // Função para remover o primeiro elemento da fila
- function removerElemento() {
-   
- }
+// Função para remover o primeiro elemento da lista
+function removerElementoInicio() {
+  if (!minhaLista.isEmpty()) {
+    const tarefaRealizada = minhaLista.removeFirst();
+    mostrarMensagemRemocao(tarefaRealizada);
+    atualizarLista();
+  } else {
+    alert("Lista de Tarefas Vazia");
+  }
+}
+
+// Função para remover o primeiro elemento da lista
+function removerElementoFinal() {
+  if (!minhaLista.isEmpty()) {
+    const tarefaRealizada = minhaLista.removeLast();
+    mostrarMensagemRemocao(tarefaRealizada);
+    atualizarLista();
+  } else {
+    alert("Lista de Tarefas Vazia");
+  }
+}
 
 //--------------------------------------------------------------------------------------------
 function mostrarMensagemRemocao(tarefaRealizada) {
-    const mensagem = document.getElementById("mensagem-remocao");
-    mensagem.innerHTML ="Tarefa "+ tarefaRealizada.descricao;
-    mensagem.style.display = "block";
-  }
+  const mensagem = document.getElementById("mensagem-remocao");
+  mensagem.innerHTML = "Tarefa realizada: " + tarefaRealizada.descricao;
+  mensagem.style.display = "block";
+}
 //-------------------------------------------------------------------------------------------- 
 // Função para atualizar a exibição da fila
- function atualizarLista() {
-   
- }
- //--------------------------------------------------------------------------------------------
-  //FUNÇÕES COMPLEMENTARES PARA A APLICAÇÃO
- //-----------------------------------------
- 
- // funcao data
- function obterDataAtual() {
-    let dataAtual = new Date();
-    let dia = dataAtual.getDate();
-    let mes = dataAtual.getMonth() + 1; // Adiciona 1 porque o mês inicia do zero
-    let ano = dataAtual.getFullYear();
-    // Formata a data como "dd/mm/aaaa"
-    let dataFormatada = `${dia.toString().padStart(2, '0')}/${mes.toString().padStart(2, '0')}/${ano}`;
-    return dataFormatada;
+function atualizarLista() {
+  const listaTarefas =
+    document.getElementById("list_listadeTarefas");
+  const lblTarefas =
+    document.getElementById("lblmostraTarefas");
+  listaTarefas.innerHTML = "";    // limpar antes de mostrar
+  if (!minhaLista.isEmpty()) {
+    lblTarefas.innerHTML = "Lista de Tarefas";
+    // limpar antes de mostrar
+    for (const tarefa of minhaLista) {
+      const novaLinha = document.createElement("li");
+      novaLinha.innerHTML = tarefa.toString();
+      listaTarefas.appendChild(novaLinha);
+    }
+  }
+  else {
+    lblTarefas.innerHTML = "Lista de Tarefas Vazia";
+  }
+
+}
+//--------------------------------------------------------------------------------------------
+//FUNÇÕES COMPLEMENTARES PARA A APLICAÇÃO
+//-----------------------------------------
+
+// funcao data
+function obterDataAtual() {
+  let dataAtual = new Date();
+  let dia = dataAtual.getDate();
+  let mes = dataAtual.getMonth() + 1; // Adiciona 1 porque o mês inicia do zero
+  let ano = dataAtual.getFullYear();
+  // Formata a data como "dd/mm/aaaa"
+  let dataFormatada = `${dia.toString().padStart(2, '0')}/${mes.toString().padStart(2, '0')}/${ano}`;
+  return dataFormatada;
 }
 //--------------------------------------------------------------------------------------------
 function obterHoraAtual() {
@@ -58,13 +127,13 @@ function obterHoraAtual() {
 function calcularDiferencaHoras(hora1, hora2) {
   const [h1, m1, s1] = hora1.split(':').map(Number);
   const [h2, m2, s2] = hora2.split(':').map(Number);
-  
+
   const diferencaSegundos = (h2 * 3600 + m2 * 60 + s2) - (h1 * 3600 + m1 * 60 + s1);
-  
+
   const horas = Math.floor(diferencaSegundos / 3600);
   const minutos = Math.floor((diferencaSegundos % 3600) / 60);
   const segundos = diferencaSegundos % 60;
-  
+
   return `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
 }
 //--------------------------------------------------------------------------------------------
@@ -104,15 +173,15 @@ function comparaTarefasDataHora(tarefa1, tarefa2) {
 function saveLinkedListToLocalStorage() {
   console.log("saveLinkedListToLocalStorage");
   let listaParaSalvar = [];
-  minhaLista.forEach((item) => {
-      listaParaSalvar.push({
-          _descricao: item.descricao,
-          _prioridade: item.prioridade,
-          _data: item.data,
-          _hora: item.hora
-      });
-      console.log(item.toString());
-  });
+  for (const item of minhaLista) {
+    listaParaSalvar.push({
+      _descricao: item.descricao,
+      _prioridade: item.prioridade,
+      _data: item.data,
+      _hora: item.hora
+    });
+    console.log(item.toString());
+  };
   let jsonStr = JSON.stringify(listaParaSalvar);
   console.log(jsonStr);
   localStorage.setItem('myLinkedList', jsonStr);
@@ -123,15 +192,15 @@ function loadLinkedListFromLocalStorage() {
   console.log("loadLinkedListFromLocalStorage");
   let jsonStr = localStorage.getItem('myLinkedList');
   if (jsonStr) {
-      let listaCarregada = JSON.parse(jsonStr);
-      for (let i = 0; i < listaCarregada.length; i++) {
-          let obj = listaCarregada[i];
-          let novaTarefa = new Tarefa(obj._descricao, obj._prioridade, obj._data, obj._hora);
-          console.log(novaTarefa.toString());
-          minhaLista.addLast(novaTarefa);
-      }
-      atualizarLista();
-      alert("Lista carregada com sucesso!");
+    let listaCarregada = JSON.parse(jsonStr);
+    for (let i = 0; i < listaCarregada.length; i++) {
+      let obj = listaCarregada[i];
+      let novaTarefa = new Tarefa(obj._descricao, obj._prioridade, obj._data, obj._hora);
+      console.log(novaTarefa.toString());
+      minhaLista.addLast(novaTarefa);
+    }
+    atualizarLista();
+    alert("Lista carregada com sucesso!");
   }
 }
 //----------  ----------------------------------------------------------------------------------
