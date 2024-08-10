@@ -1,5 +1,4 @@
 class No {
-
     constructor(novoDado) {
         this.dado = novoDado;
         this.ant = null;
@@ -11,125 +10,125 @@ class LinkedList {
     constructor() {
         this.head = null;
         this.tail = null;
-        this.lenght = 0;
+        this.length = 0; // Corrigido para 'length'
     }
 
     addFirst(novoDado) {
         const novoNo = new No(novoDado);
 
-        if (this.head === null) { //se ela estiver vazia
+        if (this.head === null) { // Se a lista estiver vazia
             this.tail = novoNo;
         } else {
             novoNo.prox = this.head;
             this.head.ant = novoNo;
         }
         this.head = novoNo;
-        this.lenght++;
+        this.length++;
         return true;
     }
 
     addLast(novoDado) {
         const novoNo = new No(novoDado);
 
-        if (this.head === null) { //se ela estiver vazia
+        if (this.head === null) { // Se a lista estiver vazia
             this.head = novoNo;
         } else {
             novoNo.ant = this.tail;
             this.tail.prox = novoNo;
-
         }
         this.tail = novoNo;
-        this.lenght++;
+        this.length++;
         return true;
     }
 
     addAtIndex(index, data) {
-        if (index < 0) {
-            // Verifica se o índice é válido (maior ou igual a zero)
-            console.log("Indice invalido. O indice deve ser um valor inteiro maior ou igual a zero.");
+        if (index < 0 || index > this.length) {
+            console.log("Índice inválido. O índice deve ser um valor inteiro maior ou igual a zero e menor ou igual ao tamanho da lista.");
             return false;
         }
 
-        if (index === 0)
-            // Se o índice for zero, chama o método addFirst() para adicionar no início da lista
-            this.addFirst(data);
+        if (index === 0) {
+            return this.addFirst(data);
+        }
 
-
-        if (index >= this.length)
-            this.addLast(data);
-
+        if (index === this.length) {
+            return this.addLast(data);
+        }
 
         const newNode = new No(data);
-        if (newNode === null)
-            return false;
-
         let noAtual = this.head;
         let indiceAtual = 0;
+
         while (indiceAtual < index - 1) {
-            // Percorre a lista até encontrar o nó anterior ao índice especificado
             noAtual = noAtual.prox;
             indiceAtual++;
         }
 
         newNode.ant = noAtual;
-        newNode.prox = noAtual.next;
-        noAtual.prox.ant = newNode;
+        newNode.prox = noAtual.prox;
+        if (noAtual.prox !== null) {
+            noAtual.prox.ant = newNode;
+        }
         noAtual.prox = newNode;
-
 
         this.length++;
         return true;
     }
 
     removeFirst() {
-        const elementoSalvo = this.head.dado;// salvar dado a ser removido para retornar
-        this.head = this.head.prox; // head = head.prox, removendo o elemento 
-        if (this.head == null) { // se for o ultimo elemento, fazer tail = null
-            this.tail = null
-        } else { //senao head.ant = null
-            this.head.ant = null
+        if (this.head === null) {
+            console.log("Lista vazia");
+            return null;
         }
-        this.lenght--; // decrementar lenght
-        return elementoSalvo;// retornar elemento
+
+        const elementoSalvo = this.head.dado; // Salvar dado a ser removido para retornar
+        this.head = this.head.prox; // Head = head.prox, removendo o elemento
+
+        if (this.head === null) { // Se for o último elemento, fazer tail = null
+            this.tail = null;
+        } else {
+            this.head.ant = null;
+        }
+
+        this.length--; // Decrementar length
+        return elementoSalvo; // Retornar elemento
     }
 
     removeLast() {
-        const elementoSalvo = this.tail.dado;
-        this.tail = this.tail.prox;
-        if (this.tail == null) {
+        if (this.tail === null) {
+            console.log("Lista vazia");
+            return null;
+        }
+
+        const elementoSalvo = this.tail.dado; // Salvar dado a ser removido para retornar
+        this.tail = this.tail.ant; // Tail = tail.ant, removendo o elemento
+
+        if (this.tail === null) { // Se for o último elemento, fazer head = null
             this.head = null;
         } else {
-            this.tail = null
+            this.tail.prox = null;
         }
-        this.lenght--;
-        return elementoSalvo;
+
+        this.length--; // Decrementar length
+        return elementoSalvo; // Retornar elemento
     }
 
     getLast() {
-        return this.tail.dado;
+        return this.tail ? this.tail.dado : null;
     }
 
     getFirst() {
-        return this.head.dado;
+        return this.head ? this.head.dado : null;
     }
 
     isEmpty() {
-        if (this.lenght == 0) {
-            return true;
-        } else {
-            return false;
-        }
-        //return this.head === null;
+        return this.length === 0;
     }
 
-    //-------------------------------------
-    //Quando um objeto tem uma propriedade [Symbol.iterator], ele pode ser iterado com construções como [ for(const item of minhaLista)*/
-
-
     [Symbol.iterator]() {
-        let currentNode = this.head; // nó atual
+        let currentNode = this.head; // Nó atual
         return {
-            next: function () {
+            next() {
                 if (currentNode !== null) {
                     let value = currentNode.dado;
                     currentNode = currentNode.prox;
@@ -140,15 +139,14 @@ class LinkedList {
             }
         };
     }
-    //—----------------
+
     toString() {
         let result = "";
-        let currentNode = this.head; //saindo do primeiro
+        let currentNode = this.head; // Começa do primeiro nó
         while (currentNode !== null) {
             result += currentNode.dado + (currentNode.prox ? " -> " : "");
             currentNode = currentNode.prox;
         }
         return result;
     }
-
 }
