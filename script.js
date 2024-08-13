@@ -10,6 +10,7 @@ function adicionarElemento() {
     const novaTarefa = new Tarefa(descricao, prioridade, obterDataAtual(), obterHoraAtual());
 
     let inserido = false;
+    let index = 0;
 
     for (const tarefa of minhaLista) {
       if (tarefa.prioridade > prioridade) {
@@ -17,6 +18,7 @@ function adicionarElemento() {
         inserido = true;
         break;
       }
+      index++;
     }
 
     if (!inserido) {
