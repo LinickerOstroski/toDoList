@@ -1,4 +1,4 @@
-// Crie uma instância da fila
+
 const minhaLista = new LinkedList();
 
 // Função para adicionar um elemento no Inicio// Função para adicionar um elemento na lista com base na prioridade
@@ -10,7 +10,6 @@ function adicionarElemento() {
     const novaTarefa = new Tarefa(descricao, prioridade, obterDataAtual(), obterHoraAtual());
 
     let inserido = false;
-    let index = 0;
 
     for (const tarefa of minhaLista) {
       if (tarefa.prioridade > prioridade) {
@@ -18,7 +17,6 @@ function adicionarElemento() {
         inserido = true;
         break;
       }
-      index++;
     }
 
     if (!inserido) {
